@@ -8,3 +8,7 @@ Python办公自动化的课程目的，为了提高上班族工作效率，用�
 https://gitcode.net/pythoncr/python_oa
 
 抖音帐号：
+
+
+清空jupyter notebook输出的命令：
+jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace xxxx.ipynb
