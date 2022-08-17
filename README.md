@@ -10,7 +10,9 @@ Python办公自动化的课程目的，为了提高上班族工作效率，用�
 
 # 课程下载
 https://gitcode.net/pythoncr/python_oa
-<img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/python_oa.png" width="50%">
+
+
+<img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/python_oa.png" width="20%">
 
 # 目录/文件说明
 
