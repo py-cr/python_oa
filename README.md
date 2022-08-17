@@ -11,7 +11,7 @@ Python办公自动化的课程目的，为了提高上班族工作效率，用�
 # 课程下载
 https://gitcode.net/pythoncr/python_oa
 
-# 目录说明
+# 目录/文件说明
 
 ### 开始Python.cmd
 * 双击运行“开始Python.cmd” ，直接打开 Python 开发环境（建议使用火狐、谷歌浏览器）
