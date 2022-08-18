@@ -22,7 +22,7 @@ https://gitcode.net/pythoncr/python_oa
 ### Python快捷入口生成.exe
 * 由于各种问题，“开始Python.cmd” 无法运行，请用管理员方式打开“Python快捷入口生成.exe”，
 * 点击“开始生成”，会生成一个快捷方式“开始Python.lnk”，然后在双击打开“开始Python.lnk”
-### 01.Excel操作
+### <img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/icons/icon-hamburg/32x32/folder.png"> 01.Excel操作
 * 基础教程，建议初学者观看
 ### 02.Word操作
 * 基础教程，建议初学者观看
