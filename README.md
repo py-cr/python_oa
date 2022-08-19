@@ -5,7 +5,7 @@
 # 介绍
 Python办公自动化的课程目的，为了提高上班族工作效率，用电脑来代替人类完成繁琐、重复的工作，比如：批量处理Excel、Word、PPT，群发邮件等等
 
-# 抖音帐号：
+# 抖音课堂：
 <img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/douyin.jpg" width="30%">
 
 # 课程下载
