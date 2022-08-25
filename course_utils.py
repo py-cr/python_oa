@@ -136,7 +136,7 @@ def _copy_files(src, dst):
         if os.path.isdir(s):
             is_recursive = contains_sub_dir(s)
             if is_recursive:
-                copy_files(s, d)
+                _copy_files(s, d)
             else:
                 force_merge_flat_dir(s, d)
 
