@@ -14,6 +14,9 @@ import zipfile
 import shutil
 import hashlib
 
+# 统计更新次数
+update_count = 0
+
 
 def force_merge_flat_dir(src_dir, dst_dir):
     """
@@ -76,8 +79,8 @@ def samefile(sfile, dfile):
         return True
     if is_text_file(sfile):
         return same_text(sfile, dfile)
-    # if get_md5(sfile) == get_md5(dfile):
-    #     return True
+    if get_md5(sfile) == get_md5(dfile):
+        return True
     return False
 
 
@@ -88,10 +91,12 @@ def force_copy_file(sfile, dfile):
     @param dfile: 目标文件
     @return:
     """
+    global update_count
     if os.path.isfile(sfile):
         if os.path.exists(dfile):
             if samefile(sfile, dfile):
                 return
+        update_count += 1
         shutil.copy2(sfile, dfile)
 
 
@@ -182,12 +187,7 @@ def zip_dir(dir_path, zipfile_path):
 
 def backup_as_zip(zipfile):
     try:
-        print("****** 注意 ******")
-        print("课程资料更新会覆盖现有文件，已经开始进行备份...")
         zip_dir(".", zipfile)
-        print("备份路径为：", os.path.abspath(zipfile))
-        print("如果更新导致您的文件被覆盖，请手动解压还原。")
-        print("******************")
     except Exception as e:
         print("ERROR：备份文件失败：" + str(e))
         exit(-1)
@@ -274,10 +274,11 @@ def update_course(backup=True):
     print("课程资料开始更新")
     # 1、清理临时文件失败
     delete_fd(save_file, unzip_dir)
+    now = datetime.datetime.now().strftime('%y%m%d%H%M%S')
+    backup_file = f"../python_oa_{now}.zip"
     if backup:
         # 备份当前目录
-        now = datetime.datetime.now().strftime('%y%m%d%H%M%S')
-        backup_as_zip(f"../python_oa_{now}.zip")
+        backup_as_zip(backup_file)
     # 2、下载文件
     print("下载中...")
     download(zip_url, save_file)
@@ -290,6 +291,15 @@ def update_course(backup=True):
     # 5、清理临时文件失败
     delete_fd(save_file, unzip_dir)
     print("课程资料更新完成 ^_^")
+    if backup:
+        if update_count == 0:
+            delete_fd(backup_file, [])
+        else:
+            print("****** 注意 ******")
+            print("课程资料更新会覆盖现有文件，已经进行了备份")
+            print("备份路径为：", os.path.abspath(backup_file))
+            print("如果更新导致您的文件被覆盖，请手动解压还原。")
+            print("******************")
 
 
 if __name__ == '__main__':
