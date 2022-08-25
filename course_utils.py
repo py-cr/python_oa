@@ -290,11 +290,12 @@ def update_course(backup=True):
     copy_files(unzip_dir, "./")
     # 5、清理临时文件失败
     delete_fd(save_file, unzip_dir)
-    print("课程资料更新完成 ^_^")
     if backup:
         if update_count == 0:
             delete_fd(backup_file, [])
+            print("当前的课程资料已经最新 ^_^")
         else:
+            print("课程资料更新完成 ^_^")
             print("****** 注意 ******")
             print("课程资料更新会覆盖现有文件，已经进行了备份")
             print("备份路径为：", os.path.abspath(backup_file))
