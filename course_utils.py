@@ -183,17 +183,17 @@ def update_course():
     save_file = "./python_oa-master.zip"
     # 解压缩文件路径
     unzip_dir = "./python_oa-master"
-    print("课程资料更新中...")
+    print("课程资料开始更新")
     # 1、清理临时文件失败
     delete_fd(save_file, unzip_dir)
     # 2、下载文件
-    print("课程资料下载中...")
+    print("下载中...")
     download(zip_url, save_file)
     # 3、解压文件到当前目录
-    print("课程资料解压中...")
+    print("解压中...")
     unzip(save_file, "./")
     # 4、复制和覆盖最新的文件到当前目录
-    print("课程资料更新中...")
+    print("更新中...")
     copy_files(unzip_dir, "./")
     # 5、清理临时文件失败
     delete_fd(save_file, unzip_dir)
