@@ -12,6 +12,7 @@ import time
 import os
 import zipfile
 import shutil
+import hashlib
 
 
 def force_merge_flat_dir(src_dir, dst_dir):
@@ -29,6 +30,57 @@ def force_merge_flat_dir(src_dir, dst_dir):
         force_copy_file(src_file, dst_file)
 
 
+def get_md5(path):
+    d5 = hashlib.md5()  # 生成一个hash的对象
+    with open(path, 'rb') as f:
+        while True:
+            content = f.read(40960)
+            if not content:
+                break
+            d5.update(content)  # 每次读取一部分，然后添加到hash对象里
+    # print(‘MD5 : %s‘ % d5.hexdigest())
+    return d5.hexdigest()  # 打印16进制的hash值
+
+
+# 是否为带BOM头的UTF8文件
+def is_text_file(pathfile):
+    file_extension = str(pathfile).split('.')[-1]
+    if file_extension in ['ipynb', 'py', 'md', 'html', 'txt', 'gitignore', 'cmd', 'bat']:
+        return True
+
+    return False
+
+
+def same_text(sfile, dfile):
+    try:
+        with open(sfile, mode='r', encoding='utf8') as f:
+            # 文件读取
+            sfile_content = f.read()
+        with open(dfile, mode='r', encoding='utf8') as f:
+            # 文件读取
+            dfile_content = f.read()
+        return sfile_content == dfile_content
+    except Exception  as e:
+        with open(sfile, mode='r') as f:
+            # 文件读取
+            sfile_content = f.read()
+        with open(dfile, mode='r') as f:
+            # 文件读取
+            dfile_content = f.read()
+        return sfile_content == dfile_content
+    return False
+
+
+def samefile(sfile, dfile):
+    if os.path.samefile(sfile, dfile):
+        return True
+    if is_text_file(sfile):
+        return same_text(sfile, dfile)
+    # if get_md5(sfile) == get_md5(dfile):
+    #     return True
+    return False
+
+
 def force_copy_file(sfile, dfile):
     """
     强制复制文件
@@ -37,6 +89,9 @@ def force_copy_file(sfile, dfile):
     @return:
     """
     if os.path.isfile(sfile):
+        if os.path.exists(dfile):
+            if samefile(sfile, dfile):
+                return
         shutil.copy2(sfile, dfile)
 
 
