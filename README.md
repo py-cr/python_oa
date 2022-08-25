@@ -45,3 +45,6 @@ https://gitcode.net/pythoncr/python_oa
 ### <img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/icons/icon-hamburg/32x32/folder.png"> 91.综合案例-02
 * 案例教程，建议观看
 ### 
+
+# 免责声明
+* 本项目开源代码和资料主要用于教学，任何直接或间接因使用我方的任何内容所导致的全部后果与我方无关，若使用者无法对使用我方内容后的任何后果负责，请不要使用我方的任何内容。若我方的任何内容侵犯了您的法律权益，请联系pythoncr@126.com，作者会第一时间删除侵权内容。
