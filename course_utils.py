@@ -159,6 +159,40 @@ def _unzip(zip_file, root):
     fz.close()
 
 
+def zip_dir(dir_path, zipfile_path):
+    """
+    zip dir
+    :param dir_path: where zip dir path
+    :param zipfile_path: zip dir
+    :return:
+    """
+    file_list = []
+    if os.path.isfile(dir_path):
+        file_list.append(dir_path)
+    else:
+        for root, dirs, files in os.walk(dir_path):
+            for name in files:
+                file_list.append(os.path.join(root, name))
+    zf = zipfile.ZipFile(zipfile_path, "w", zipfile.zlib.DEFLATED)
+    for file_path in file_list:
+        _dir = file_path[len(dir_path) - 1:]
+        zf.write(file_path, _dir)
+    zf.close()
+
+
+def backup_as_zip(zipfile):
+    try:
+        print("****** 注意 ******")
+        print("课程资料更新会覆盖现有文件，已经开始进行备份...")
+        zip_dir(".", zipfile)
+        print("备份路径为：", os.path.abspath(zipfile))
+        print("如果更新导致您的文件被覆盖，请手动解压还原。")
+        print("******************")
+    except Exception as e:
+        print("ERROR：备份文件失败：" + str(e))
+        exit(-1)
+
+
 def unzip(zip_file, root):
     """
     解压缩文件到指定目录
@@ -230,8 +264,7 @@ def download(url, save_file):
         exit(-1)
 
 
-def update_course():
-    # now = datetime.datetime.now().strftime('%y%m%d%H')
+def update_course(backup=True):
     # 下载地址
     zip_url = "https://gitcode.net/pythoncr/python_oa/-/archive/master/python_oa-master.zip"
     # 下载保存文件路径
@@ -241,6 +274,10 @@ def update_course():
     print("课程资料开始更新")
     # 1、清理临时文件失败
     delete_fd(save_file, unzip_dir)
+    if backup:
+        # 备份当前目录
+        now = datetime.datetime.now().strftime('%y%m%d%H%M%S')
+        backup_as_zip(f"../python_oa_{now}.zip")
     # 2、下载文件
     print("下载中...")
     download(zip_url, save_file)
