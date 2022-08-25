@@ -96,7 +96,8 @@ def force_copy_file(sfile, dfile):
         if os.path.exists(dfile):
             if samefile(sfile, dfile):
                 return
-        update_count += 1
+        if not sfile.endswith("更新课程资料.ipynb"):
+            update_count += 1
         shutil.copy2(sfile, dfile)
 
 
