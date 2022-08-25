@@ -271,6 +271,8 @@ def download(url, save_file):
 
 
 def update_course(backup=True):
+    global update_count
+    update_count = 0
     # 下载地址
     zip_url = "https://gitcode.net/pythoncr/python_oa/-/archive/master/python_oa-master.zip"
     # 下载保存文件路径
