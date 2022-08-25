@@ -121,6 +121,11 @@ def _copy_files(src, dst):
     @param dst: 目标目录
     @return:
     """
+    exclude_dirs = [".ipynb_checkpoints", "__pycache__", ".git", ".idea"]
+    for d in exclude_dirs:
+        if src.endswith(d):
+            return
+
     for item in os.listdir(src):
         s = os.path.join(src, item)
         d = os.path.join(dst, item)
