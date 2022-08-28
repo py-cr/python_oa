@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2022/4/23 15:30
+# @Time    : 2022/8/23 15:30
 # @Author  : Python超人
 # @FileName: mail.py
 
@@ -9,6 +9,8 @@ from email.header import Header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import parseaddr, formataddr
+import os
+
 
 class Mail(object):
     def __init__(self, account):
@@ -45,16 +47,35 @@ class Mail(object):
         errfile.write(now + ' ' + str(errcont) + '\n')
         errfile.close()
 
-    def send_text(self, mail_to, subject, text):
-        msg = MIMEText(text, 'plain', 'utf-8')
-        self.send(mail_to, subject, msg)
+    def build_attachment(self, file_path, filename=None, content_type='application/octet-stream'):
+        # 添加附件
+        if filename is None:
+            filename = os.path.basename(file_path)
 
-    def send_html(self, mail_to, subject, html):
+        # 解决办法： 将 att1[‘Content-Disposition’] = 'attachment;filename = “星测试附件.txt”'
+        # 替换成 att1.add_header(‘Content-Disposition’, ‘attachment’, filename=‘星测试附件.txt’)，即可完美解决
+
+        att = MIMEText(open(file_path, 'rb').read(), 'base64', 'utf-8')
+        att["Content-Type"] = content_type
+        # att["Content-Disposition"] = 'attachment; filename="' + filename + '"'
+        att.add_header('Content-Disposition', 'attachment', filename=filename)
+        return att
+
+    def send_text(self, mail_to, subject, text, attachment_paths=[]):
+        if len(attachment_paths) == 0:
+            msg = MIMEText(text, 'plain', 'utf-8')
+        else:
+            msg = MIMEMultipart('alternative')
+            msg.attach(MIMEText(text, 'plain', 'utf-8'))
+
+        self.send(mail_to, subject, msg, attachment_paths)
+
+    def send_html(self, mail_to, subject, html, attachment_paths=[]):
         msg = MIMEMultipart('alternative')
         msg.attach(MIMEText(html, 'html'))
-        self.send(mail_to, subject, msg)
+        self.send(mail_to, subject, msg, attachment_paths)
 
-    def send(self, mail_to, subject, msg):
+    def send(self, mail_to, subject, msg, attachment_paths=[]):
         from_name = None
         if self.from_account.__contains__('display_name'):
             from_name = self.from_account["display_name"]
@@ -69,6 +90,10 @@ class Mail(object):
 
         msg['To'] = mail_to
         msg['Subject'] = Header(subject, 'utf-8').encode()
+
+        for attachment_path in attachment_paths:
+            attachment = self.build_attachment(attachment_path)
+            msg.attach(attachment)
 
         try:
             print("SMTP服务器%s连接中..." % smtp_server)
