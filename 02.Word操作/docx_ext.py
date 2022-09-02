@@ -4,34 +4,109 @@
 # @FileName: docx_ext.py
 
 import docx # 导入word工具包
+from docx import Document
 from docx.enum.dml import MSO_THEME_COLOR_INDEX
 
-def add_hyperlink(paragraph, text, url):
+
+def add_bookmark(paragraph, text, name):
+    """
+    在指定的段落对象后面增加书签
+    例子：
+    p1 = document.add_paragraph()
+    hyperlink = add_bookmark(paragraph=p1,
+                          text='书签文本',
+                          name='书签名')
+    :param paragraph: 段落对象
+    :param text: 书签文本
+    :param name: 书签名
+    :return:
+    """
+    # tag = run._r  # for reference the following also works: tag =  document.element.xpath('//w:r')[-1]
+    start = docx.oxml.shared.OxmlElement('w:bookmarkStart')
+    start.set(docx.oxml.ns.qn('w:id'), name)
+    start.set(docx.oxml.ns.qn('w:name'), name)
+    paragraph._p.append(start)
+
+    txt = docx.oxml.OxmlElement('w:r')
+    txt.text = text
+    paragraph._p.append(txt)
+
+    end = docx.oxml.shared.OxmlElement('w:bookmarkEnd')
+    end.set(docx.oxml.ns.qn('w:id'), name)
+    end.set(docx.oxml.ns.qn('w:name'), name)
+
+    paragraph._p.append(end)
+
+def add_hyperlink(paragraph, url, text, tooltip=None, font=None, color=None, underline=True):
+    """
+    在指定的段落对象后面增加链接
+    例子：
+    p1 = document.add_paragraph()
+    hyperlink = add_hyperlink(paragraph=p1,
+                          url='http://www.baidu.com',
+                          text='百度',
+                          tooltip=None,
+                          font="微软雅黑",
+                          color=None,
+                          underline=True)
+    :param paragraph: 段落对象
+    :param url: 链接地址
+    :param text: 链接文本
+    :param tooltip: 链接提示（为空则为 url）
+    :param font: 字体
+    :param color: 颜色
+    :param underline: 下划线
+    :return: 超链接对象
+    """
     # This gets access to the document.xml.rels file and gets a new relation id value
     part = paragraph.part
     r_id = part.relate_to(url, docx.opc.constants.RELATIONSHIP_TYPE.HYPERLINK, is_external=True)
 
     # Create the w:hyperlink tag and add needed values
     hyperlink = docx.oxml.shared.OxmlElement('w:hyperlink')
+    hyperlink.set(docx.oxml.shared.qn('w:anchor'), url, )
     hyperlink.set(docx.oxml.shared.qn('r:id'), r_id, )
-
-    # Create a w:r element and a new w:rPr element
+    if tooltip:
+        hyperlink.set(docx.oxml.shared.qn('w:tooltip'), tooltip, )
+    # Create a w:r element
     new_run = docx.oxml.shared.OxmlElement('w:r')
+
+    # Create a new w:rPr element
     rPr = docx.oxml.shared.OxmlElement('w:rPr')
+
+    # Add color if it is given
+    # <w:color w:val="000000" w:themeColor="hyperlink" />
+    if not color is None:
+        c = docx.oxml.shared.OxmlElement('w:color')
+        c.set(docx.oxml.shared.qn('w:val'), color)
+        rPr.append(c)
+    else:
+        c = docx.oxml.shared.OxmlElement('w:color')
+        c.set(docx.oxml.shared.qn('w:themeColor'), "hyperlink")
+        rPr.append(c)
+
+    if font:
+        # <w:rFonts w:ascii="Arial" w:eastAsia="宋体" w:hAnsi="Arial" w:cs="Arial" />
+        f = docx.oxml.shared.OxmlElement('w:rFonts')
+        f.set(docx.oxml.shared.qn('w:ascii'), font)
+        f.set(docx.oxml.shared.qn('w:eastAsia'), font)
+        f.set(docx.oxml.shared.qn('w:hAnsi'), font)
+        f.set(docx.oxml.shared.qn('w:cs'), font)
+        rPr.append(f)
+
+    if underline:
+        u = docx.oxml.shared.OxmlElement('w:u')
+        u.set(docx.oxml.shared.qn('w:val'), 'single')
+        rPr.append(u)
 
     # Join all the xml elements together add add the required text to the w:r element
     new_run.append(rPr)
     new_run.text = text
+    new_run.bold = True
+    # new_run.font.color.theme_color = MSO_THEME_COLOR_INDEX.HYPERLINK
     hyperlink.append(new_run)
 
-    # Create a new Run object and add the hyperlink into it
-    r = paragraph.add_run ()
-    r._r.append (hyperlink)
-
-    # A workaround for the lack of a hyperlink style (doesn't go purple after using the link)
-    # Delete this if using a template that has the hyperlink style in it
-    r.font.color.theme_color = MSO_THEME_COLOR_INDEX.HYPERLINK
-    r.font.underline = True
+    paragraph._p.append(hyperlink)
 
     return hyperlink
 
@@ -54,6 +129,8 @@ def read_docx(docx_file):
                 r_info += "粗体字,"
             if r.italic: # 如果是斜体字
                 r_info += "斜体字,"
+            if r.underline: # 如果是下划线字
+                r_info += "下划线,"
             if r.font.color.rgb is not None: # 如果文字有颜色，显示字体颜色
                 r_info += "颜色:" + str(r.font.color.rgb) + ","
             # 如果长度大于0，说明 r_info 有样式信息
