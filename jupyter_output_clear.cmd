@@ -14,7 +14,7 @@ goto exec
 :input
 SET ipynb=
 cls
-echo 【清空 jupyter notebook 所有的输出】
+echo 【课程输出清理】
 echo 请输入 .ipynb 文件的路径 或者 拖动文件到这，按回车（为空回车则退出） 
 SET /p ipynb=
 
