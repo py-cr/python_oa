@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# @Time    : 2022/10/06 15:30
+# @Author  : Python超人
+# @FileName: removebg.py
+
 import requests
 import logging
 import os
