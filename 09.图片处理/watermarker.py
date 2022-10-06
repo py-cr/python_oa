@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2022/10/06 15:30
 # @Author  : Python超人
-# @FileName: watermarker.py
+# @FileName: water_marker.py
 
 from PIL import Image, ImageDraw, ImageFont
 import os
@@ -72,9 +72,14 @@ def add_water_marker_text_to_image(src_image,
     image_with_text = image_with_text.crop(
         (src_image.size[0], src_image.size[1], src_image.size[0] * 2, src_image.size[1] * 2))
 
+    out_dir = os.path.dirname(out_image)
+    if not os.path.exists(out_dir):
+        os.mkdir(out_dir)
+        
     image_with_text.save(out_image)
     del image_draw  # 删除画笔
     image_with_text.close()  # 关闭图片
+    print("水印添加成功：%s" % out_image)
 
 
 if __name__ == '__main__':
