@@ -10,7 +10,7 @@ import os
 def add_water_marker_text_to_image(src_image,
                                    out_image,
                                    text,
-                                   alpha=50,
+                                   alpha=125,
                                    rotate=-45,
                                    font_file="msyh.ttc",
                                    font_size=50,
@@ -21,7 +21,7 @@ def add_water_marker_text_to_image(src_image,
     :param src_image: 原始图片路径
     :param out_image: 增加水印后的图片路径
     :param text: 增加水印文字内容
-    :param alpha: 透明度 0 - 255，默认：50
+    :param alpha: 透明度 0 - 255，默认：125
     :param rotate: 旋转角度，默认：-45度
     :param font_file: 字体文件，默认：微软雅黑
         # msyh.ttc  msyhbd.ttc  msyhl.ttc 微软雅黑
