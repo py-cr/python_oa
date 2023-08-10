@@ -19,7 +19,10 @@ def show_img(image_file, title=None, figsize=(8, 6)):
     plt.figure('image', figsize=figsize)
     plt.xticks([])
     plt.yticks([])
-    im = Image.open(image_file)
+    if isinstance(image_file, str):
+        im = Image.open(image_file)
+    else:
+        im = image_file
     plt.imshow(im)
     if title is not None:
         plt.title(title)

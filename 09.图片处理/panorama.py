@@ -1,0 +1,95 @@
+from PIL import Image
+import sys
+import os
+
+sys.path.append("..")
+from tools.ffmpeg_utils import ffmpeg_cmd
+
+
+def conv_to_cubemap_6x1(image_path):
+    # Open the panoramic image
+    panoramic_image = Image.open(image_path)
+    # Get the width and height of the panoramic image
+    width, height = panoramic_image.size
+    # Calculate the dimensions of each cubemap face
+    face_width = width // 4
+    face_height = height // 3
+    # Create a new blank cubemap image with the desired dimensions
+    cubemap_image = Image.new('RGB', (face_width * 6, face_height))
+    # Crop and paste each face of the panoramic image into the cubemap image
+    cubemap_image.paste(panoramic_image.crop((face_width * 2, face_height, face_width * 3, face_height * 2)),
+                        (0, 0))  # Right
+    cubemap_image.paste(panoramic_image.crop((0, face_height, face_width, face_height * 2)),
+                        (face_width, 0))  # Left
+    cubemap_image.paste(panoramic_image.crop((face_width, 0, face_width * 2, face_height)),
+                        (face_width * 2, 0))  # Up
+    cubemap_image.paste(panoramic_image.crop((face_width, face_height * 2, face_width * 2, face_height * 3)),
+                        (face_width * 3, 0))  # Down
+    cubemap_image.paste(panoramic_image.crop((face_width, face_height, face_width * 2, face_height * 2)),
+                        (face_width * 4, 0))  # Front
+    cubemap_image.paste(panoramic_image.crop((face_width * 3, face_height, face_width * 4, face_height * 2)),
+                        (face_width * 5, 0))  # Back
+
+    cubemap_6x1 = image_path[0:-4] + "_6x1.png"
+    # Return the cubemap image
+    cubemap_image.save(cubemap_6x1)
+    return cubemap_6x1
+
+
+# rludfb
+def conv_to_cubemap_6x1_2(image_path):
+    # Open the panoramic image
+    panoramic_image = Image.open(image_path)
+    # Get the width and height of the panoramic image
+    width, height = panoramic_image.size
+    # Calculate the dimensions of each cubemap face
+    face_width = width // 4
+    face_height = height // 3
+    # Create a new blank cubemap image with the desired dimensions
+    cubemap_image = Image.new('RGB', (face_width * 6, face_height))
+    # Crop and paste each face of the panoramic image into the cubemap image
+    cubemap_image.paste(panoramic_image.crop((face_width * 2, face_height, face_width * 3, face_height * 2)),
+                        (0, 0))  # Right
+    cubemap_image.paste(panoramic_image.crop((face_width, face_height, face_width * 2, face_height * 2)),
+                        (face_width, 0))  # Left
+    cubemap_image.paste(panoramic_image.crop((face_width * 2, 0, face_width * 3, face_height)),
+                        (face_width * 2, 0))  # Up
+    cubemap_image.paste(panoramic_image.crop((face_width * 2, face_height * 2, face_width * 3, face_height * 3)),
+                        (face_width * 3, 0))  # Down
+    cubemap_image.paste(panoramic_image.crop((face_width * 3, face_height, face_width * 4, face_height * 2)),
+                        (face_width * 4, 0))  # Front
+    cubemap_image.paste(panoramic_image.crop((0, face_height, face_width, face_height * 2)),
+                        (face_width * 5, 0))  # Back
+    # Return the cubemap image
+    return cubemap_image
+
+
+def cubemap_6x1_to_panorama(cubemap_6x1_image, output_image):
+    """
+    cubemap 6x1 转全景图片
+    @param cubemap_6x1_image:
+    @param output_image:
+    @return:
+    """
+    ffmpeg_cmd(f'-i "{cubemap_6x1_image}" -y -vf v360=c6x1:e:cubic:in_forder="rludfb" "{output_image}"')
+    return output_image
+
+
+def conv_to_panoramic_video(panoramic_image, audio_file, output_mp4, size="1920x1080", rate=1):
+    """
+    将一张全景图片、音频合成一个 mp4视频文件
+    @param panoramic_image: 全景图片
+    @param audio_file: 音频文件
+    @param output_mp4: 输出的mp4视频文件名
+    @param size: 输出的分辨率：
+                1K分辨率：1920*1080
+                2K分辨率：2048×1080
+                4K分辨率：4096×2160
+                8K分辨率：7680x4320
+    @param rate:
+    @return:
+    """
+    cmd = f' -r {rate} -i "{panoramic_image}" -i "{audio_file}" ' \
+          f'-s {size} -pix_fmt yuvj420p -t 278 -vcodec libx264 "{output_mp4}"'
+    ffmpeg_cmd(cmd)
+    return output_mp4
