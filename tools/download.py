@@ -1,6 +1,7 @@
 from __future__ import annotations
 # 用于显示进度条
-from tqdm import tqdm
+# from tqdm import tqdm
+from tqdm.notebook import tqdm as tqdm
 # 用于发起网络请求
 import requests
 
@@ -120,9 +121,10 @@ def download_multitask(url: str, file_name: str, retry_times: int = 3, each_size
 
 def download_singletask(url, file_name):
     # 导入requests 库
-    import requests
+    # import requests
     # 导入 tqdm
-    from tqdm import tqdm
+    # from tqdm import tqdm, tqdm_notebook
+    # from tqdm.notebook import tqdm as tqdm
 
     # 文件下载直链
     # url = 'https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz'
@@ -130,16 +132,20 @@ def download_singletask(url, file_name):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36 QIHU 360SE'
     }
-    # file_name = 'ffmpeg-6.0.tar.xz'
-    # 发起 head 请求，即只会获取响应头部信息
-    head = requests.head(url, headers=headers)
-    # 文件大小，以 B 为单位
-    file_size = head.headers.get('Content-Length')
-    if file_size is not None:
-        file_size = int(file_size)
+    # # file_name = 'ffmpeg-6.0.tar.xz'
+    # # 发起 head 请求，即只会获取响应头部信息
+    # head = requests.head(url, headers=headers)
+    # # 文件大小，以 B 为单位
+    # file_size = head.headers.get('Content-Length')
+    # if file_size is not None:
+    #     file_size = int(file_size)
     response = requests.get(url, headers=headers, stream=True)
     # 一块文件的大小
     chunk_size = 1024
+    file_size = response.headers['content-length']
+    if file_size is not None:
+        file_size = int(file_size)
+    print(file_size)
     bar = tqdm(total=file_size, desc=f'下载文件 {file_name}')
     with open(file_name, mode='wb') as f:
         # 写入分块文件
