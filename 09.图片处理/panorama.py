@@ -6,7 +6,55 @@ sys.path.append("..")
 from tools.ffmpeg_utils import ffmpeg_cmd
 
 
-def conv_to_cubemap_6x1(image_path):
+#     1   2   3   4
+#   ┌───┬───┬───┬───┐
+# 1 │   │ u │   │   │
+#   ├───┼───┼───┼───┤
+# 2 │ l │ f │ r │ b │
+#   ├───┼───┼───┼───┤
+# 3 │   │ d │   │   │
+#   └───┴───┴───┴───┘
+
+def conv_to_cubemap_6x1(src_image, col_num=4, row_num=3,
+                        rludfb=[(3, 2), (1, 2), (2, 1), (2, 3), (2, 2), (4, 2)]):
+    # Open the panoramic image
+    panoramic_image = Image.open(src_image)
+    # Get the width and height of the panoramic image
+    width, height = panoramic_image.size
+    # Calculate the dimensions of each cubemap face
+    face_width = width // col_num
+    face_height = height // row_num
+    # Create a new blank cubemap image with the desired dimensions
+    cubemap_image = Image.new('RGB', (face_width * 6, face_height))
+
+    for idx, (col_idx, row_idx) in enumerate(rludfb):
+        cubemap_image.paste(panoramic_image.crop((face_width * (col_idx - 1),
+                                                  face_height * (row_idx - 1),
+                                                  face_width * col_idx,
+                                                  face_height * row_idx)),
+                            (face_width * idx, 0))
+
+    # Crop and paste each face of the panoramic image into the cubemap image
+    # cubemap_image.paste(panoramic_image.crop((face_width * 2, face_height, face_width * 3, face_height * 2)),
+    #                     (0, 0))  # Right
+    # cubemap_image.paste(panoramic_image.crop((0, face_height, face_width, face_height * 2)),
+    #                     (face_width, 0))  # Left
+    # cubemap_image.paste(panoramic_image.crop((face_width, 0, face_width * 2, face_height)),
+    #                     (face_width * 2, 0))  # Up
+    # cubemap_image.paste(panoramic_image.crop((face_width, face_height * 2, face_width * 2, face_height * 3)),
+    #                     (face_width * 3, 0))  # Down
+    # cubemap_image.paste(panoramic_image.crop((face_width, face_height, face_width * 2, face_height * 2)),
+    #                     (face_width * 4, 0))  # Front
+    # cubemap_image.paste(panoramic_image.crop((face_width * 3, face_height, face_width * 4, face_height * 2)),
+    #                     (face_width * 5, 0))  # Back
+
+    cubemap_6x1 = src_image[0:-4] + "_6x1.png"
+    # Return the cubemap image
+    cubemap_image.save(cubemap_6x1)
+    return cubemap_6x1
+
+
+def conv_to_cubemap_6x1_1(image_path):
     # Open the panoramic image
     panoramic_image = Image.open(image_path)
     # Get the width and height of the panoramic image

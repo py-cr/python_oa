@@ -157,12 +157,12 @@ def download_singletask(url, file_name):
 
 
 def download(url, file_name):
-    try:
-        # 用于多线程操作
-        import multitasking
-        # 导入 retry 库以方便进行下载出错重试
-        from retry import retry
-
-        download_multitask(url, file_name)
-    except Exception as e:
-        download_singletask(url, file_name)
+    # try:
+    #     # 用于多线程操作
+    #     import multitasking
+    #     # 导入 retry 库以方便进行下载出错重试
+    #     from retry import retry
+    #
+    #     download_multitask(url, file_name)
+    # except Exception as e:
+    download_singletask(url, file_name)
