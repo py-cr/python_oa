@@ -5,6 +5,17 @@ import os
 
 FFMPEG_BIN_PATH = 'ffmpeg/bin'
 
+def download_ffmpeg():
+    file_name = 'ffmpeg-master-latest-win64-gpl-shared'
+    url = f'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/{file_name}.zip'
+    save_name = 'ffmpeg.zip'
+    if os.path.exists(save_name):
+        os.remove(save_name)
+    download(url, save_name)
+    unzip(save_name)
+    os.rename(file_name, 'ffmpeg')
+    os.remove(save_name)
+    
 
 def ffmpeg_check(ffmpeg_bin_path=None):
     global FFMPEG_BIN_PATH
@@ -15,14 +26,8 @@ def ffmpeg_check(ffmpeg_bin_path=None):
     if os.path.exists(os.path.join(FFMPEG_BIN_PATH, 'ffmpeg.exe')):
         print('ffmpeg 已经下载')
     else:
-        url = 'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip'
-        file_name = 'ffmpeg.zip'
-        if os.path.exists(file_name):
-            os.remove(file_name)
-        download(url, file_name)
-        unzip(file_name)
-        os.rename('ffmpeg-master-latest-win64-gpl-shared', 'ffmpeg')
-        os.remove(file_name)
+        print('第一次运行，需下载 ffmpeg，请稍候...')
+        download_ffmpeg()
 
 
 def ffmpeg_cmd(cmd_args):
