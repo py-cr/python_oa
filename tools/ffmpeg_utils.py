@@ -24,7 +24,8 @@ def ffmpeg_check(ffmpeg_bin_path=None):
 
     FFMPEG_BIN_PATH = os.path.abspath(ffmpeg_bin_path)
     if os.path.exists(os.path.join(FFMPEG_BIN_PATH, 'ffmpeg.exe')):
-        print('ffmpeg 已经下载')
+        # print('ffmpeg 已经下载')
+        pass
     else:
         print('第一次运行，需下载 ffmpeg，请稍候...')
         download_ffmpeg()
