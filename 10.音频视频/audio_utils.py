@@ -86,8 +86,8 @@ def trim_audio(input_file, start_time, end_time,
     if fade_out_duration > 0:
         if len(afade) > 0:
             afade = afade + ","
-
-        afade = afade + f"afade=t=out:st={end_time - start_time - fade_out_duration}:d={fade_out_duration}"
+        st = round(end_time - start_time - fade_out_duration, 2)
+        afade = afade + f"afade=t=out:st={st}:d={fade_out_duration}"
 
     if volume != 1.0:
         if len(afade) > 0:
