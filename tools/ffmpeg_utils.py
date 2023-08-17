@@ -5,6 +5,7 @@ import os
 
 FFMPEG_BIN_PATH = 'ffmpeg/bin'
 
+
 def download_ffmpeg():
     file_name = 'ffmpeg-master-latest-win64-gpl-shared'
     url = f'https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/{file_name}.zip'

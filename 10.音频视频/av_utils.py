@@ -6,6 +6,31 @@ from tools.ffmpeg_utils import ffmpeg_cmd
 
 from datetime import datetime, timedelta
 
+from matplotlib.font_manager import FontProperties
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.rcParams['font.sans-serif'] = ['SimHei']
+font = FontProperties(fname=r"simsun.ttf", size=16)
+
+
+def show_img(image_file, title=None, figsize=(8, 6)):
+    """
+    显示图片的函数
+    """
+    from PIL import Image
+    plt.figure('image', figsize=figsize)
+    plt.xticks([])
+    plt.yticks([])
+    if isinstance(image_file, str):
+        im = Image.open(image_file)
+    else:
+        im = image_file
+    plt.imshow(im)
+    if title is not None:
+        plt.title(title)
+    plt.show()
+
 
 def makedirs(file_path):
     dirname = os.path.dirname(file_path)
@@ -173,7 +198,7 @@ if __name__ == '__main__':
     #         start_time=start_time, end_time=end_time,
     #         output_file=output_file,
     #         fade_in_duration=3, fade_out_duration=5)
-    ia2mp4(['images/magazine_1.jpg','images/magazine_2.jpg','images/magazine_3.jpg'],
+    ia2mp4(['images/magazine_1.jpg', 'images/magazine_2.jpg', 'images/magazine_3.jpg'],
            'output/少年_片段.mp3',
            'output/magazine.mp4',
            setpts=2
