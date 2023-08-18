@@ -124,7 +124,7 @@ def av_trim(input_file, start_time, end_time,
 def v2mp3(video_file, output_mp3_file):
     makedirs(output_mp3_file)
     # ffmpeg
-    ffmpeg_cmd(f'-i "{video_file}" -vn -acodec libmp3lame "{output_mp3_file}"')
+    ffmpeg_cmd(f' -y -i "{video_file}" -vn -acodec libmp3lame "{output_mp3_file}"')
     return output_mp3_file
 
 
