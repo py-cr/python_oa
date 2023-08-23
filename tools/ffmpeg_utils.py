@@ -44,8 +44,23 @@ def ffmpeg_cmd(cmd_args):
     # cmd = 'SET PATH=%PATH%;"' + os.path.abspath(FFMPEG_BIN_PATH) + '" & ' + cmd
     cmd = '"' + os.path.abspath(os.path.join(FFMPEG_BIN_PATH, "ffmpeg.exe")) + '" ' + cmd_args
     print(cmd)
-    result = os.popen(cmd)
-    print(result.read())
+    # result = os.popen(cmd)
+    # outline = result.read()
+    # print(outline)
+    # return outline
+
+    import subprocess
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    output, error = process.communicate()
+    output_info = ""
+    # 输出信息
+    output_lines = output.decode('utf-8')
+    if len(output_lines) > 0:
+        output_lines += "\n"
+
+    output_info += error.decode('utf-8')
+    # print(output_info)
+    return output_info
     # result = system_call(cmd)
     # print(result)
 

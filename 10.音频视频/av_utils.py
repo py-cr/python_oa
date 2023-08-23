@@ -1,5 +1,6 @@
 import sys
 import os
+import math
 
 sys.path.append("..")
 from tools.ffmpeg_utils import ffmpeg_cmd
@@ -128,23 +129,28 @@ def v2mp3(video_file, output_mp3_file):
     return output_mp3_file
 
 
-def ia2mp4(image_files, audio_file, output_mp4_file, setpts=3):
+def ia2mp4(image_files, audio_file, output_mp4_file):
     if isinstance(image_files, list) and len(image_files) == 1:
         image_files = image_files[0]
+
+    duration = get_duration(audio_file)
 
     if isinstance(image_files, list):
         cmd = " -y "
         vn = ""
         filter_complex = ''
         images_len = len(image_files)
-        if not isinstance(setpts, list):
-            setpts = [setpts] * images_len
+        # 计算每张图片的显示的时间长度
+        setpt = duration / images_len
+        setpt = round(math.ceil(setpt * 1000) / 1000, 3)
+        # if not isinstance(setpts, list):
+        #     setpts = [setpts] * images_len
 
         for i, image_file in enumerate(image_files):
-            cmd += f' -loop 1 -t {setpts[i]} -i "{image_file}" '
+            cmd += f' -loop 1 -t {setpt} -i "{image_file}" '
             # cmd += f' -loop 1 -i "{image_file}" '
             # filter_complex += f'[{i}:v]setpts=PTS+{setpts[i]}/TB[v{i}];'
-            filter_complex += f'[{i}:v]setpts={setpts[i]}*PTS[v{i}];'
+            filter_complex += f'[{i}:v]setpts=1*PTS[v{i}];'
             # [0:v]setpts=3*PTS[v0]
             vn += f"[v{i}]"
         filter_complex += f'{vn}concat=n={images_len}:v=1:a=0[v]'
@@ -179,6 +185,17 @@ def ia2mp4(image_files, audio_file, output_mp4_file, setpts=3):
     pass
 
 
+def get_duration(file):
+    import re
+    pattern = "Duration: (.*?), start: (.*?), bitrate: (\\d*) kb\\/s"
+    output = ffmpeg_cmd(f' -i "{file}"')
+    result = re.findall(pattern=pattern, string=output)
+
+    if len(result) > 0:
+        duration = time_to_seconds(result[0][0]) + float(result[0][1])
+    return duration
+
+
 # 测试
 # print(time_to_seconds('01:02'))  # 输出62.0
 # print(time_to_seconds('01:02:03'))  # 输出3723.0
@@ -198,8 +215,8 @@ if __name__ == '__main__':
     #         start_time=start_time, end_time=end_time,
     #         output_file=output_file,
     #         fade_in_duration=3, fade_out_duration=5)
-    ia2mp4(['images/magazine_1.jpg', 'images/magazine_2.jpg', 'images/magazine_3.jpg'],
-           'output/少年_片段.mp3',
-           'output/magazine.mp4',
-           setpts=2
-           )
+    get_duration('output/少年_片段.mp3')
+    # ia2mp4(['images/magazine_1.jpg', 'images/magazine_2.jpg', 'images/magazine_3.jpg'],
+    #        'output/少年_片段.mp3',
+    #        'output/magazine.mp4'
+    #        )
