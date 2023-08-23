@@ -232,7 +232,7 @@ if __name__ == '__main__':
     #         start_time=start_time, end_time=end_time,
     #         output_file=output_file,
     #         fade_in_duration=3, fade_out_duration=5)
-    get_duration('output/少年_片段.mp3')
+    print(get_duration('output/少年_片段.mp3'))
     # ia2mp4(['images/magazine_1.jpg', 'images/magazine_2.jpg', 'images/magazine_3.jpg'],
     #        'output/少年_片段.mp3',
     #        'output/magazine.mp4'

@@ -46,6 +46,8 @@ https://gitcode.net/pythoncr/python_oa
 * 专业教程，选择观看
 ### <img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/icons/icon-hamburg/32x32/folder.png"> 09.图片处理
 * 专业教程，选择观看
+### <img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/icons/icon-hamburg/32x32/folder.png"> 10.音频视频
+* 专业教程，选择观看
 ### <img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/icons/icon-hamburg/32x32/folder.png"> 90.综合案例-01
 * 案例教程，建议观看
 ### <img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/icons/icon-hamburg/32x32/folder.png"> 91.综合案例-02
