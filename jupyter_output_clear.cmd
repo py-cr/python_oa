@@ -1,5 +1,5 @@
 @echo off
-SET Anaconda3=C:\ProgramData\Anaconda3
+SET Anaconda3=D:\Anaconda3
 
 if not exist "%Anaconda3%\python.exe" (
   echo %Anaconda3% envs not found!

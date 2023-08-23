@@ -33,6 +33,24 @@ def show_img(image_file, title=None, figsize=(8, 6)):
     plt.show()
 
 
+def show_imgs(images, titles=[], rows=3, cols=3):
+    from PIL import Image
+    from matplotlib import pyplot as plt
+    for i in range(len(images)):
+        image_file = images[i]
+        if isinstance(image_file, str):
+            im = Image.open(image_file)
+        else:
+            im = image_file
+        plt.subplot(rows, cols, i + 1), plt.imshow(im)
+        if i <= len(titles) - 1:
+            plt.title(titles[i])
+        else:
+            plt.title("image:%s" % (i))
+        plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
 def makedirs(file_path):
     dirname = os.path.dirname(file_path)
     if len(dirname) > 0 and not os.path.exists(dirname):
