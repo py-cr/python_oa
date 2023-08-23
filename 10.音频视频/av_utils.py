@@ -151,9 +151,8 @@ def ia2mp4(image_files, audio_file, output_mp4_file):
     if isinstance(image_files, list) and len(image_files) == 1:
         image_files = image_files[0]
 
-    duration = get_duration(audio_file)
-
     if isinstance(image_files, list):
+        duration = get_duration(audio_file)
         cmd = " -y "
         vn = ""
         filter_complex = ''
