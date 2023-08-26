@@ -265,7 +265,7 @@ def download(url, save_file):
     """
     try:
         import tools.download as _download
-        _download(url, save_file)
+        _download.download(url, save_file)
     except Exception as e:
         print("ERROR：下载文件失败：" + str(e))
         exit(-1)
