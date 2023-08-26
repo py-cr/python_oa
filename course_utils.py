@@ -63,7 +63,7 @@ def same_text(sfile, dfile):
             # 文件读取
             dfile_content = f.read()
         return sfile_content == dfile_content
-    except Exception  as e:
+    except Exception as e:
         with open(sfile, mode='r') as f:
             # 文件读取
             sfile_content = f.read()
@@ -246,15 +246,15 @@ def delete_fd(files, dirs):
         exit(-1)
 
 
-def _download(url, save_file):
-    """
-    下载文件
-    @param url: 下载地址
-    @param save_file: 保存的文件名
-    """
-    r = requests.get(url)
-    with open(save_file, "wb") as code:
-        code.write(r.content)
+# def _download(url, save_file):
+#     """
+#     下载文件
+#     @param url: 下载地址
+#     @param save_file: 保存的文件名
+#     """
+#     r = requests.get(url)
+#     with open(save_file, "wb") as code:
+#         code.write(r.content)
 
 
 def download(url, save_file):
@@ -264,6 +264,7 @@ def download(url, save_file):
     @param save_file: 保存的文件名
     """
     try:
+        import tools.download as _download
         _download(url, save_file)
     except Exception as e:
         print("ERROR：下载文件失败：" + str(e))
