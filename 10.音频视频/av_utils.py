@@ -33,21 +33,79 @@ def show_img(image_file, title=None, figsize=(8, 6)):
     plt.show()
 
 
-def show_imgs(images, titles=[], rows=3, cols=3):
+def show_imgs(images, titles=[], rows=3, cols=3, figsize=(18, 16)):
     from PIL import Image
+
+    if titles is None:
+        titles = []
+
+    if len(titles) == 0:
+        titles = images
+
     from matplotlib import pyplot as plt
+    plt.figure('image', figsize=figsize)
     for i in range(len(images)):
         image_file = images[i]
+        if i <= len(titles) - 1:
+            title = titles[i]
+        else:
+            title = None
         if isinstance(image_file, str):
             im = Image.open(image_file)
+            if title is None:
+                title = image_file
         else:
             im = image_file
         plt.subplot(rows, cols, i + 1), plt.imshow(im)
-        if i <= len(titles) - 1:
-            plt.title(titles[i])
-        else:
-            plt.title("image:%s" % (i))
+        if title is None:
+            title = "image:%s" % (i)
+        plt.title(title)
         plt.xticks([]), plt.yticks([])
+    plt.show()
+
+
+def show_imgs(images, titles=[], rows=3, cols=3, figsize=(8, 6),
+              left=0.03, bottom=0.03, right=0.97, top=0.97, wspace=0.05, hspace=0.05
+              # left=0, bottom=0, right=1, top=0.9,wspace=-0.2, hspace=0.2
+              ):
+    from PIL import Image
+    from matplotlib import pyplot as plt
+
+    # 如果titles为空，则使用images作为titles
+    if titles is None:
+        titles = []
+    if len(titles) == 0:
+        titles = images
+
+    # 创建一个figure对象，并设置大小
+    fig = plt.figure('image', figsize=figsize)
+
+    # left=None, bottom=None, right=None, top=None,wspace=-0.2, hspace=-0.5
+    # 调整子图之间的间距
+    fig.subplots_adjust(left=left, bottom=bottom, right=right, top=top, wspace=wspace, hspace=hspace)
+
+    # 遍历所有图片，并显示在子图中
+    for i in range(len(images)):
+        image_file = images[i]
+        # 如果titles中有对应的标题，则使用该标题
+        if i <= len(titles) - 1:
+            title = titles[i]
+        else:
+            title = None
+        if isinstance(image_file, str):
+            im = Image.open(image_file)
+            if title is None:
+                title = image_file
+        else:
+            im = image_file
+        # 在第i+1个子图中显示该图片
+        ax = fig.add_subplot(rows, cols, i + 1)
+        ax.imshow(im)
+        if title is None:
+            title = "image:%s" % (i)
+        ax.set_title(title)
+        ax.set_xticks([])
+        ax.set_yticks([])
     plt.show()
 
 
@@ -140,14 +198,14 @@ def av_trim(input_file, start_time, end_time,
     return output_file
 
 
-def v2mp3(video_file, output_mp3_file):
+def v_to_mp3(video_file, output_mp3_file):
     makedirs(output_mp3_file)
     # ffmpeg
     ffmpeg_cmd(f' -y -i "{video_file}" -vn -acodec libmp3lame "{output_mp3_file}"')
     return output_mp3_file
 
 
-def ia2mp4(image_files, audio_file, output_mp4_file):
+def ia_to_mp4(image_files, audio_file, output_mp4_file):
     if isinstance(image_files, list) and len(image_files) == 1:
         image_files = image_files[0]
 
@@ -232,8 +290,9 @@ if __name__ == '__main__':
     #         start_time=start_time, end_time=end_time,
     #         output_file=output_file,
     #         fade_in_duration=3, fade_out_duration=5)
-    print(get_duration('output/少年_片段.mp3'))
+    # print(get_duration('output/少年_片段.mp3'))
     # ia2mp4(['images/magazine_1.jpg', 'images/magazine_2.jpg', 'images/magazine_3.jpg'],
     #        'output/少年_片段.mp3',
     #        'output/magazine.mp4'
     #        )
+    show_imgs(["images/cat.jpg", "images/duck.jpg", "images/bear.jpg"], cols=3, rows=1)
