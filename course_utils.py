@@ -246,15 +246,15 @@ def delete_fd(files, dirs):
         exit(-1)
 
 
-# def _download(url, save_file):
-#     """
-#     下载文件
-#     @param url: 下载地址
-#     @param save_file: 保存的文件名
-#     """
-#     r = requests.get(url)
-#     with open(save_file, "wb") as code:
-#         code.write(r.content)
+def _download(url, save_file):
+    """
+    下载文件
+    @param url: 下载地址
+    @param save_file: 保存的文件名
+    """
+    r = requests.get(url)
+    with open(save_file, "wb") as code:
+        code.write(r.content)
 
 
 def download(url, save_file):
@@ -264,8 +264,8 @@ def download(url, save_file):
     @param save_file: 保存的文件名
     """
     try:
-        import tools.download as _download
-        _download.download(url, save_file)
+        # import tools.download as _download
+        _download(url, save_file)
     except Exception as e:
         print("ERROR：下载文件失败：" + str(e))
         exit(-1)
