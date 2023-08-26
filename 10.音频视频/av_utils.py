@@ -271,6 +271,42 @@ def get_duration(file):
     return duration
 
 
+def picture_in_picture(image_file, video_file, pos_start, pos_end, output_file=None):
+    """
+    实现画中画
+    :param image_file: 图片
+    :param video_file: 画中画的视频文件
+    :param pos_start: 画中画开始位置
+    :param pos_end: 画中画结束位置
+    :param output_file: 输出视频文件
+    :return:
+    """
+    pos_x, pos_y, width, height = pos_start[0], pos_start[1], pos_end[0] - pos_start[0], pos_end[1] - pos_start[1]
+
+    if output_file is None:
+        p = video_file.rfind(".")
+        output_file = video_file[:p] + "_pip" + video_file[p:]
+    ffmpeg_cmd(
+        f' -y -r 15 -i "{image_file}" -i "{video_file}" -filter_complex "[1:v]scale=w={width}:h={height} '
+        f' [ovrl]; [0:v][ovrl] overlay=x={pos_x}:y={pos_y}" -pix_fmt yuvj420p -t 278 -vcodec libx264 "{output_file}"')
+
+
+def cubemap_6x1_to_panorama(cubemap_6x1_image, output_image, in_forder="rludfb"):
+    """
+    cubemap 6x1 转全景图片
+    @param cubemap_6x1_image:
+    @param output_image:
+    @param in_forder: 默认：rludfb
+    @return:
+    """
+    dirname = os.path.dirname(output_image)
+    if len(dirname) > 0 and not os.path.exists(dirname):
+        os.makedirs(dirname)
+
+    ffmpeg_cmd(f'-i "{cubemap_6x1_image}" -y -vf v360=c6x1:e:cubic:in_forder="{in_forder}" "{output_image}"')
+    return output_image
+
+
 # 测试
 # print(time_to_seconds('01:02'))  # 输出62.0
 # print(time_to_seconds('01:02:03'))  # 输出3723.0
