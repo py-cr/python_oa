@@ -12,7 +12,7 @@ Python办公自动化的课程目的，为了提高上班族工作效率，用�
 <img src="09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/universe_sim_list.jpg?raw=true" width="80.7%">
 
 # 关注更多资源：
-<img src="https://gitcode.net/pythoncr/python_oa/-/raw/master/09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/douyin_x.jpg" width="40%">
+<img src="09.%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/images/dy_xhs.jpg?raw=true" width="80%">
 
 # 课程下载
 https://gitcode.net/pythoncr/python_oa
